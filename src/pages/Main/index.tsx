@@ -4,9 +4,8 @@ import { Sidebar } from '../../components/Sidebar'
 
 import { Container } from './styles'
 
-import { SnackTitle } from '../../components/SnackTitle'
-
 import logoImg from './../../assets/logo.svg'
+import { MyOrder } from '../../components/MyOrder'
 
 export default function Main() {
   return (
@@ -16,6 +15,7 @@ export default function Main() {
         <img src={logoImg} alt='Logo do site' />
         <Outlet />
       </section>
+      <MyOrder />
     </Container>
   )
 }
