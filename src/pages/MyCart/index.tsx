@@ -1,8 +1,8 @@
-import { Head } from '../../../components/Head'
+import { Head } from '../../components/Head'
 
 import { Container } from './styles'
 
-import { OrderHeader } from '../../../components/OrderHeader'
+import { OrderHeader } from '../../components/OrderHeader'
 import { Table } from './Table'
 
 export default function Main() {

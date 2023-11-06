@@ -17,8 +17,8 @@ export default function App() {
         <SnackProvider>
           <CartProvider>
             <AppRoutes />
-            <GlobalStyle />
             <ToastContainer autoClose={2000} />
+            <GlobalStyle />
             <Normalize />
           </CartProvider>
         </SnackProvider>

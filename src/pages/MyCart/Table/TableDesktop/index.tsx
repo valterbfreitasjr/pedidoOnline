@@ -1,11 +1,11 @@
-import { currencyFormat } from '../../../../../helpers/currencyFormat'
-import { useCart } from '../../../../../hooks/useCart'
+import { currencyFormat } from '../../../../helpers/currencyFormat'
+import { useCart } from '../../../../hooks/useCart'
 import { Container } from './styles'
 
-import { ConfirmOrder } from '../../../../../components/OrderCloseAction/ConfirmOrder'
+import { ConfirmOrder } from '../../../../components/OrderCloseAction/ConfirmOrder'
 
-import plusImg from '../../../../../assets/circle-plus.svg'
-import minusImg from '../../../../../assets/circle-minus.svg'
+import plusImg from '../../../../assets/circle-plus.svg'
+import minusImg from '../../../../assets/circle-minus.svg'
 
 import { FaTrashAlt } from 'react-icons/fa'
 

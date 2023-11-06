@@ -8,8 +8,8 @@ export function PayOrder() {
   const valorTotal = cart.reduce((acc, item) => (acc += item.subtotal), 0)
 
   return (
-    <Container to={'/'}>
-      <button type='button'>Pagar</button>
+    <Container>
+      <button type='submit'>Pagar</button>
       <span>
         Total <strong>{currencyFormat(valorTotal)}</strong>
       </span>

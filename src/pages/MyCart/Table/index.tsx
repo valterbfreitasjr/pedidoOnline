@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useCart } from '../../../../hooks/useCart'
+import { useCart } from '../../../hooks/useCart'
 
 import { TableDesktop } from './TableDesktop/index'
 import { TableMobile } from './TableMobile'
-import { EmptyCart } from '../../../../components/EmptyCart'
+import { EmptyCart } from '../../../components/EmptyCart'
 
 export function Table() {
   const [windowWidth, setWindowWidth] = useState(document.documentElement.clientWidth)
