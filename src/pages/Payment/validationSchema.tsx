@@ -1,4 +1,4 @@
-import { isValidPhone, isValidCPF, isValidCNPJ } from '@brazilian-utils/brazilian-utils'
+import { isValidCNPJ, isValidCPF, isValidPhone } from '@brazilian-utils/brazilian-utils'
 import isValidCreditCard from 'card-validator'
 import * as yup from 'yup'
 
@@ -44,9 +44,34 @@ export const schema = yup
         'O número do cartão é inválido.',
         (value) => isValidCreditCard.number(value).isValid,
       ),
-    creditCardHolderName: yup.string().required('O nome impresso no cartão é obrigatório.'),
-    creditCardExpiration: yup.string().required('Data obrigatória.'),
-    creditCardCode: yup.string().required('Código de segurança obrigatório.'),
+    creditCardHolderName: yup
+      .string()
+      .required('O nome impresso no cartão é obrigatório.')
+      .min(3, 'O nome do titular deve ser completo.')
+      .matches(/(\w.+\s).+/gi, 'O nome do titular deve conter o sobrenome.'),
+    creditCardExpiration: yup
+      .string()
+      .required('A data de validade é obrigatória.')
+      .transform((value) => {
+        const [month, year] = value.split('/')
+
+        if (month && year && month.length === 2 && year.length === 2)
+          return new Date(+`20${year}`, +month - 1, 1).toISOString() // parseInt = Number = + , casting para number.
+
+        return value
+      })
+      .test('validateCreditCardExpirantion', 'A data de validade é inválida', (value) => {
+        const expirationDate = new Date(value)
+        const today = new Date()
+
+        return expirationDate >= today
+      }),
+    creditCardCode: yup
+      .string()
+      .required('Código de segurança obrigatório.')
+      .transform((value) => value.replace(/[^\d]+/g, ''))
+      .min(3, 'O CVV deve possuir entre 3 e 4 dígitos.')
+      .max(4, 'O CVV deve possuir entre 3 e 4 dígitos.'),
   })
   .required()
 

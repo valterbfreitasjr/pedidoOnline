@@ -1,15 +1,20 @@
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { IMaskInput } from 'react-imask'
 
 import { Head } from '../../components/Head'
 import { PayOrder } from '../../components/OrderCloseAction/PayOrder'
 import { OrderHeader } from '../../components/OrderHeader'
 
-import { Container, Form, Inner } from './styles'
 import { FieldValues, schema } from './validationSchema'
 
+import IMask from 'imask'
+import { Container, Form, Inner } from './styles'
+import { useCart } from '../../hooks/useCart'
+import { CustomerData } from '../../interfaces/CustomerData'
+
 export default function Payment() {
+  const { payOrder } = useCart()
   const {
     control,
     handleSubmit,
@@ -17,7 +22,7 @@ export default function Payment() {
   } = useForm<FieldValues>({
     resolver: yupResolver(schema),
   })
-  const onSubmit: SubmitHandler<FieldValues> = (data) => console.log('data', data)
+  const onSubmit: SubmitHandler<FieldValues> = (data) => payOrder(data as CustomerData)
 
   return (
     <Container>
@@ -32,7 +37,7 @@ export default function Payment() {
             <Controller
               name='fullName'
               control={control}
-              render={({ field }) => (
+              render={({ field: ref, ...field }) => (
                 <input type='text' id='fullName' autoComplete='name' {...field} />
               )}
             />
@@ -45,7 +50,7 @@ export default function Payment() {
               <Controller
                 name='email'
                 control={control}
-                render={({ field }) => (
+                render={({ field: ref, ...field }) => (
                   <input type='text' id='email' autoComplete='email' {...field} />
                 )}
               />
@@ -58,7 +63,7 @@ export default function Payment() {
               <Controller
                 name='mobile'
                 control={control}
-                render={({ field }) => (
+                render={({ field: ref, ...field }) => (
                   <IMaskInput
                     type='tel'
                     id='mobile'
@@ -76,7 +81,7 @@ export default function Payment() {
               <Controller
                 name='document'
                 control={control}
-                render={({ field }) => (
+                render={({ field: ref, ...field }) => (
                   <IMaskInput
                     type='text'
                     id='document'
@@ -96,7 +101,7 @@ export default function Payment() {
             <Controller
               name='zipCode'
               control={control}
-              render={({ field }) => (
+              render={({ field: ref, ...field }) => (
                 <IMaskInput
                   type='text'
                   id='zipCode'
@@ -114,7 +119,7 @@ export default function Payment() {
             <Controller
               name='street'
               control={control}
-              render={({ field }) => <input type='text' id='street' {...field} />}
+              render={({ field: ref, ...field }) => <input type='text' id='street' {...field} />}
             />
             {errors.street && <p className='error'>{errors.street.message}</p>}
           </div>
@@ -125,7 +130,7 @@ export default function Payment() {
               <Controller
                 name='number'
                 control={control}
-                render={({ field }) => <input type='text' id='number' {...field} />}
+                render={({ field: ref, ...field }) => <input type='text' id='number' {...field} />}
               />
               {errors.number && <p className='error'>{errors.number.message}</p>}
             </div>
@@ -135,7 +140,9 @@ export default function Payment() {
               <Controller
                 name='complement'
                 control={control}
-                render={({ field }) => <input type='text' id='complement' {...field} />}
+                render={({ field: ref, ...field }) => (
+                  <input type='text' id='complement' {...field} />
+                )}
               />
               {errors.complement && <p className='error'>{errors.complement.message}</p>}
             </div>
@@ -147,7 +154,9 @@ export default function Payment() {
               <Controller
                 name='neighborhood'
                 control={control}
-                render={({ field }) => <input type='text' id='neighborhood' {...field} />}
+                render={({ field: ref, ...field }) => (
+                  <input type='text' id='neighborhood' {...field} />
+                )}
               />
               {errors.neighborhood && <p className='error'>{errors.neighborhood.message}</p>}
             </div>
@@ -157,7 +166,7 @@ export default function Payment() {
               <Controller
                 name='city'
                 control={control}
-                render={({ field }) => <input type='text' id='city' {...field} />}
+                render={({ field: ref, ...field }) => <input type='text' id='city' {...field} />}
               />
               {errors.city && <p className='error'>{errors.city.message}</p>}
             </div>
@@ -167,7 +176,7 @@ export default function Payment() {
               <Controller
                 name='state'
                 control={control}
-                render={({ field }) => (
+                render={({ field: ref, ...field }) => (
                   <select id='state' {...field}>
                     <option value=''>Selecione</option>
                     <option value='SP'>São Paulo</option>
@@ -187,7 +196,7 @@ export default function Payment() {
             <Controller
               name='creditCardNumber'
               control={control}
-              render={({ field }) => (
+              render={({ field: ref, ...field }) => (
                 <IMaskInput
                   type='text'
                   id='creditCardNumber'
@@ -211,30 +220,65 @@ export default function Payment() {
 
           <div className='field'>
             <label htmlFor='creditCardHolderName'>Nome impresso no cartão</label>
-            <input type='text' id='creditCardHolderName' name='cc-name' />
+
+            <Controller
+              name='creditCardHolderName'
+              control={control}
+              render={({ field: ref, ...field }) => (
+                <input type='text' id='creditCardHolderName' {...field} />
+              )}
+            />
+            {errors.creditCardHolderName && (
+              <p className='error'>{errors.creditCardHolderName.message}</p>
+            )}
           </div>
 
           <div className='grouped'>
             <div className='field'>
               <label htmlFor='creditCardExpiration'>Validade</label>
-              <input
-                type='text'
-                id='creditCardExpiration'
+              <Controller
                 name='creditCardExpiration'
-                autoComplete='cc-exp'
-                placeholder='MM/AA'
+                control={control}
+                render={({ field: ref, ...field }) => (
+                  <IMaskInput
+                    type='text'
+                    id='creditCardExpiration'
+                    mask={IMask.createMask([
+                      {
+                        mask: 'MM/YY',
+                        blocks: {
+                          MM: {
+                            mask: IMask.MaskedRange,
+                            from: 1,
+                            to: 12,
+                          },
+                          YY: {
+                            mask: IMask.MaskedRange,
+                            from: new Date().getFullYear() - 2000,
+                            to: 99,
+                          },
+                        },
+                      },
+                    ])}
+                    {...field}
+                  />
+                )}
               />
+              {errors.creditCardExpiration && (
+                <p className='error'>{errors.creditCardExpiration.message}</p>
+              )}
             </div>
 
             <div className='field'>
               <label htmlFor='creditCardCode'>Código de segurança</label>
-              <input
-                type='text'
-                id='creditCardCode'
+              <Controller
                 name='creditCardCode'
-                autoComplete='cc-csc'
-                placeholder='CVV'
+                control={control}
+                render={({ field: ref, ...field }) => (
+                  <IMaskInput type='text' id='creditCardCode' mask={'0000'} {...field} />
+                )}
               />
+              {errors.creditCardCode && <p className='error'>{errors.creditCardCode.message}</p>}
             </div>
           </div>
           <PayOrder />
