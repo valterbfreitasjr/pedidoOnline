@@ -28,9 +28,26 @@ interface CartProviderProps {
 
 export const CartContext = createContext({} as CartContextProps)
 
+const localStorageKey = '@FoodCommerce:cart'
+
 export function CartProvider({ children }: CartProviderProps) {
   const navigate = useNavigate()
-  const [cart, setCart] = useState<Snack[]>([])
+  const [cart, setCart] = useState<Snack[]>(() => {
+    const value = localStorage.getItem(localStorageKey)
+
+    if (value) return JSON.parse(value)
+
+    return []
+  })
+
+  function saveCart(items: Snack[]) {
+    setCart(items)
+    localStorage.setItem(localStorageKey, JSON.stringify(items))
+  }
+
+  function clearCart() {
+    localStorage.removeItem(localStorageKey)
+  }
 
   function addSnackIntoCart(snack: SnackData): void {
     //buscar
@@ -49,7 +66,7 @@ export function CartProvider({ children }: CartProviderProps) {
         return item
       })
       toast.success(`+1 ${snackEmoji(snack.snack)} ${snack.name} - Adicionado com sucesso!`)
-      setCart(newCart)
+      saveCart(newCart)
       return
     }
 
@@ -59,13 +76,13 @@ export function CartProvider({ children }: CartProviderProps) {
 
     toast.success(`${snackEmoji(snack.snack)} ${snack.name} - Adicionado com sucesso!`)
 
-    setCart(newCart)
+    saveCart(newCart)
   }
 
   function removeSnackFromCart(snack: Snack) {
     const newCart = cart.filter((item) => !(item.id === snack.id && item.snack === snack.snack))
     toast.success(`Snack removido com sucesso!`)
-    setCart(newCart)
+    saveCart(newCart)
   }
 
   function updateSnackQuantity(snack: Snack, newQuantity: number) {
@@ -84,7 +101,7 @@ export function CartProvider({ children }: CartProviderProps) {
       return item
     })
 
-    setCart(newCart)
+    saveCart(newCart)
   }
 
   function snackCartIncrement(snack: Snack) {
@@ -100,7 +117,13 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   function payOrder(customer: CustomerData) {
-    return console.log('payOrder', customer)
+    return (
+      console.log('payOrder', cart, customer),
+      //Chamada de API ao backend
+
+      clearCart()
+    )
+    //Será executado após o backend retornar positivo da API
   }
 
   return (
