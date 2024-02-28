@@ -1,0 +1,62 @@
+// Outlet
+//     Utilizado para renderizar sub páginas
+//     import { Outlet } from 'react-router-dom'
+
+// NavLink
+//      Utilizado na 'Sidebar' para redirecionar os acessos das páginas (urls)
+//      import { NavLink } from 'react-router-dom'
+//      OU, { Link }
+
+// React-Icons
+//      Utilizado para ícones prontos
+//      npm install react-icons -s
+//      import {FiPlus} from 'react-icons/fi';
+
+// Polished
+//      Utilizado no &:hover do svg do button, na criação dos Snacks, símbolo (+)
+//      npm install polished -s
+
+// Axios
+// Utilizado para fazer chamadas a endpoints.
+//      npm i axios -S
+
+// JSON-Server
+// Utilizado para criar mocks de API
+//      npm i json-server --save-dev (para ser utilizado apenas no ambiente de desenvolvimento)
+// ** Criar na raíz do projeto o arquivo ' db.json '.
+// package.json, em 'scripts: "json-server": "json-server --watch db.json --port 5000"'
+// >> npm run json-server   ** Entrar na pasta do projeto.
+
+// Skeleton
+// Utilizados no loading das páginas, se assemelham aos componentes que irão ser carregados, assim dando ao usuário uma percepção do que está por vir a ser exibido
+// Tópico 7 - 4º Aula, ensinando a construir o Skeleton de base e definindo os possíveis tipos que o Skeleton poderá ser definido ** ATENÇÃO **
+// Tópico 7 - 5º Aula, é ensinado um lógica com css. ** ATENÇÃO **
+
+// ** o css declarado no 'Skeleton' faz parte do styled-components
+
+// {`${cart.length}`.padStart(2, '0')} - Para termos os 0 (zeros) nos pedidos, formatar.
+// {currencyFormat{item.price}} - formatar dinheiro.
+
+// React Toastify
+// Para gerar os alertas de adição ou remoção dos itens  -- npm i react-toastify
+// Ref: https://fkhadra.github.io/react-toastify/introduction
+
+// npm i react-icons
+// Para ícones
+
+//  useNavigate  from 'react-router-dom'
+// Utilizado para nevagação entre as páginas, como no caso do método no context (payOrder e confirmOrder para '/payment')
+
+// -- Validações front-end
+// npm i react-hook-form
+//  lib: React Hook Form  https://react-hook-form.com/get-started <- Validação
+//  lib: Yup  https://github.com/jquense/yup <- Schema e Validator, utilizado para criar os schemas e validar os campos do form.
+
+// iMask - Máscaras em campos de formulários.
+// imask.js.org
+// ATENÇÃO ao utilizar em conjunto com "React Hook Form" - não utilizar o 'register' do React Hook Form, pois o iMask utiliza o register, ref etc...
+// -- Utilizado no formulário de pagamento.
+
+// npm i @brazilian-utils/brazilian-utils - Faz validações CPF(isValidCFP), CNPJ(isValidCNPJ), fone(isValidPhone) etc e mascaramento dos campos do formulário.
+
+// npm i card-validator - Similar a 'brazilian-utils', porém para validação de cartões.

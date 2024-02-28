@@ -5,7 +5,7 @@ import { Container } from '../styles'
 export function ConfirmOrder() {
   const { cart, confirmOrder } = useCart()
 
-  const valorTotal = cart.reduce((acc, item) => (acc += item.subtotal), 0)
+  const valorTotal = cart.reduce((acc, item) => (acc += Number(item.subtotal)), 0)
 
   return (
     <Container>

@@ -1,5 +1,4 @@
 import { FiPlus } from 'react-icons/fi'
-import { FaTrashAlt } from 'react-icons/fa'
 
 import { currencyFormat } from '../../helpers/currencyFormat'
 import { SkeletonSnack } from './SkeletonSnack'
@@ -12,7 +11,7 @@ interface SnacksProps {
   snacks: SnackData[]
 }
 
-export function Snacks({ snacks }: SnacksProps) {
+export function Snacks({ snacks }: Readonly<SnacksProps>) {
   const { cart, addSnackIntoCart } = useCart()
 
   return (

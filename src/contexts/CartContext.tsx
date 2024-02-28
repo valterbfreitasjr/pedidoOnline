@@ -6,11 +6,8 @@ import { snackEmoji } from '../helpers/snackEmoji'
 
 import { SnackData } from '../interfaces/SnackData'
 import { CustomerData } from '../interfaces/CustomerData'
-
-interface Snack extends SnackData {
-  quantity: number
-  subtotal: number
-}
+import { Snack } from '../interfaces/Snack'
+import { processCheckout } from '../services/api'
 
 interface CartContextProps {
   cart: Snack[]
@@ -30,7 +27,7 @@ export const CartContext = createContext({} as CartContextProps)
 
 const localStorageKey = '@FoodCommerce:cart'
 
-export function CartProvider({ children }: CartProviderProps) {
+export function CartProvider({ children }: Readonly<CartProviderProps>) {
   const navigate = useNavigate()
   const [cart, setCart] = useState<Snack[]>(() => {
     const value = localStorage.getItem(localStorageKey)
@@ -116,14 +113,23 @@ export function CartProvider({ children }: CartProviderProps) {
     navigate('/payment')
   }
 
-  function payOrder(customer: CustomerData) {
-    return (
-      console.log('payOrder', cart, customer),
-      //Chamada de API ao backend
+  async function payOrder(customer: CustomerData) {
+    try {
+      const response = await processCheckout(cart, customer)
+
+      if (response.data.status !== 'PAID') {
+        toast.error('Erro ao processar o pagamento, por favor, tente novamente mais tarde.')
+        return
+      }
 
       clearCart()
-    )
-    //Será executado após o backend retornar positivo da API
+
+      navigate(`/order/success/${response.data.id}`)
+    } catch (error) {
+      console.error(error)
+      toast.error('Erro ao processar o pedido.')
+    }
+    return
   }
 
   return (

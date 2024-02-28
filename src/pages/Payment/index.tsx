@@ -21,6 +21,7 @@ export default function Payment() {
     formState: { errors },
   } = useForm<FieldValues>({
     resolver: yupResolver(schema),
+    shouldFocusError: false,
   })
   const onSubmit: SubmitHandler<FieldValues> = (data) => payOrder(data as CustomerData)
 
@@ -37,7 +38,7 @@ export default function Payment() {
             <Controller
               name='fullName'
               control={control}
-              render={({ field: ref, ...field }) => (
+              render={({ field }) => (
                 <input type='text' id='fullName' autoComplete='name' {...field} />
               )}
             />
@@ -50,7 +51,7 @@ export default function Payment() {
               <Controller
                 name='email'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <input type='text' id='email' autoComplete='email' {...field} />
                 )}
               />
@@ -63,7 +64,7 @@ export default function Payment() {
               <Controller
                 name='mobile'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <IMaskInput
                     type='tel'
                     id='mobile'
@@ -81,7 +82,7 @@ export default function Payment() {
               <Controller
                 name='document'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <IMaskInput
                     type='text'
                     id='document'
@@ -101,7 +102,7 @@ export default function Payment() {
             <Controller
               name='zipCode'
               control={control}
-              render={({ field: ref, ...field }) => (
+              render={({ field }) => (
                 <IMaskInput
                   type='text'
                   id='zipCode'
@@ -119,7 +120,7 @@ export default function Payment() {
             <Controller
               name='street'
               control={control}
-              render={({ field: ref, ...field }) => <input type='text' id='street' {...field} />}
+              render={({ field }) => <input type='text' id='street' {...field} />}
             />
             {errors.street && <p className='error'>{errors.street.message}</p>}
           </div>
@@ -130,7 +131,7 @@ export default function Payment() {
               <Controller
                 name='number'
                 control={control}
-                render={({ field: ref, ...field }) => <input type='text' id='number' {...field} />}
+                render={({ field }) => <input type='text' id='number' {...field} />}
               />
               {errors.number && <p className='error'>{errors.number.message}</p>}
             </div>
@@ -140,9 +141,7 @@ export default function Payment() {
               <Controller
                 name='complement'
                 control={control}
-                render={({ field: ref, ...field }) => (
-                  <input type='text' id='complement' {...field} />
-                )}
+                render={({ field }) => <input type='text' id='complement' {...field} />}
               />
               {errors.complement && <p className='error'>{errors.complement.message}</p>}
             </div>
@@ -154,9 +153,7 @@ export default function Payment() {
               <Controller
                 name='neighborhood'
                 control={control}
-                render={({ field: ref, ...field }) => (
-                  <input type='text' id='neighborhood' {...field} />
-                )}
+                render={({ field }) => <input type='text' id='neighborhood' {...field} />}
               />
               {errors.neighborhood && <p className='error'>{errors.neighborhood.message}</p>}
             </div>
@@ -166,7 +163,7 @@ export default function Payment() {
               <Controller
                 name='city'
                 control={control}
-                render={({ field: ref, ...field }) => <input type='text' id='city' {...field} />}
+                render={({ field }) => <input type='text' id='city' {...field} />}
               />
               {errors.city && <p className='error'>{errors.city.message}</p>}
             </div>
@@ -176,7 +173,7 @@ export default function Payment() {
               <Controller
                 name='state'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <select id='state' {...field}>
                     <option value=''>Selecione</option>
                     <option value='SP'>São Paulo</option>
@@ -196,7 +193,7 @@ export default function Payment() {
             <Controller
               name='creditCardNumber'
               control={control}
-              render={({ field: ref, ...field }) => (
+              render={({ field }) => (
                 <IMaskInput
                   type='text'
                   id='creditCardNumber'
@@ -224,9 +221,7 @@ export default function Payment() {
             <Controller
               name='creditCardHolderName'
               control={control}
-              render={({ field: ref, ...field }) => (
-                <input type='text' id='creditCardHolderName' {...field} />
-              )}
+              render={({ field }) => <input type='text' id='creditCardHolderName' {...field} />}
             />
             {errors.creditCardHolderName && (
               <p className='error'>{errors.creditCardHolderName.message}</p>
@@ -239,27 +234,23 @@ export default function Payment() {
               <Controller
                 name='creditCardExpiration'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <IMaskInput
                     type='text'
                     id='creditCardExpiration'
-                    mask={IMask.createMask([
-                      {
-                        mask: 'MM/YY',
-                        blocks: {
-                          MM: {
-                            mask: IMask.MaskedRange,
-                            from: 1,
-                            to: 12,
-                          },
-                          YY: {
-                            mask: IMask.MaskedRange,
-                            from: new Date().getFullYear() - 2000,
-                            to: 99,
-                          },
-                        },
+                    mask='YY/MM'
+                    blocks={{
+                      YY: {
+                        mask: '00',
+                        from: 0,
+                        to: 99,
                       },
-                    ])}
+                      MM: {
+                        mask: '00',
+                        from: 1,
+                        to: 12,
+                      },
+                    }}
                     {...field}
                   />
                 )}
@@ -274,7 +265,7 @@ export default function Payment() {
               <Controller
                 name='creditCardCode'
                 control={control}
-                render={({ field: ref, ...field }) => (
+                render={({ field }) => (
                   <IMaskInput type='text' id='creditCardCode' mask={'0000'} {...field} />
                 )}
               />
